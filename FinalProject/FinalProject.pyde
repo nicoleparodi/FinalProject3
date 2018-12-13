@@ -47,15 +47,15 @@ class Bird(Creature):
 
     def update(self):
         if self.keyHandler[LEFT] == True:
-            self.vx = -5
+            self.vx = -6
             self.dir = -1
         elif self.keyHandler[RIGHT] == True:
-            self.vx = 5
+            self.vx = 6
             self.dir = 1
         elif self.keyHandler[UP] == True:
-            self.vy = -5
+            self.vy = -6
         elif self.keyHandler[DOWN] == True:
-            self.vy = 5
+            self.vy = 6
 
         self.x += self.vx
         self.y += self.vy
@@ -94,6 +94,7 @@ class Bird(Creature):
         return ((self.x-e.x)**2+(self.y-e.y)**2)**0.5
     
     def display (self):
+        self.update()
         image(self.img,self.x,self.y)
         
 class Book(Creature):#book is an enemie
@@ -178,11 +179,10 @@ class Game():
         self.g=g
         self.state = "menu"
         self.time = 0
+        self.counter = 0
         
-        self.birdimg = loadImage(path+"/images/birdsprite.jpg")
-        
-        self.bird = Bird(200,100,4,100,self.birdimg,32,32,5)
-
+        self.birdimg = loadImage(path+"/images/blueparrot.png")
+        self.bird = Bird(50,100,4,100,self.birdimg,16,12,2)
 
 
         self.booklist = [] # will add 2 different books to list
@@ -218,6 +218,11 @@ class Game():
     
             # self.img = loadImage(path+"/images/platform.png")
             
+        
+        rect(0, 0, 250,50)
+        textSize(40)
+        text(self.counter, 20, 80)
+            
 
         for i in self.basketballs:
             i.display()
@@ -239,8 +244,6 @@ class Game():
 #time aspect
 
 g = Game(1025,550,200)
-# g = Game(1920, 1080, 
-#          w h g
          
 def setup():
     size(g.w,g.h)
@@ -253,7 +256,6 @@ def draw():
         # background(0)
         textSize(36)
         fill(255)
-        rect(g.w//2, g.h//2, 250,50)
         # code for the choices 
         
     elif g.state == 'play':
@@ -281,8 +283,6 @@ def keyPressed():
         g.bird.keyHandler[UP]=True
     elif keyCode == DOWN:
         g.bird.keyHandler[DOWN]= True
-
-
 
 def keyReleased():
     if keyCode == LEFT:
