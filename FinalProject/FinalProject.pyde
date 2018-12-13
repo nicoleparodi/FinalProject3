@@ -18,52 +18,64 @@ class Creature():
         self.img = img
         self.dir = 1
 
-    #def placeOnScreen():
-        # the place on the screen should be in the middle ish??
+    
 
     def update(self):
 
         self.x += self.vx
         self.y += self.vy
 
-        # needs to update with the key pressed or released 
-        #if moved down then new g will be the place its at
-        #needs if collided with the books or balls
+   
     def display(self):
         self.update()
         
-        if self.vx != 0:
-            self.f = (self.f+0.3)%self.F
+    #     if self.vx != 0:
+    #         self.f = (self.f+0.3)%self.F
 
-        if self.dir > 0:
-            image(self.img,200,100,self.w,self.h)
-        elif self.dir < 0:
-            image(self.img,200,100,self.w,self.h,self.x,0,0,self.y) 
+    #     if self.dir > 0:
+    #         image(self.img,200,100,self.w,self.h)
+    #     elif self.dir < 0:
+    #         image(self.img,200,100,self.w,self.h,self.x,0,0,self.y) 
 
 class Bird(Creature):
     def __init__(self,x,y,r,g,img,w,h,F):
         Creature.__init__(self,x,y,r,g,img,w,h,F)
         self.keyHandler = {LEFT:False, RIGHT:False, UP:False, DOWN: False}
+        
+        self.Score = 0
+        self.Lives = 3
 
     def update(self):
         if self.keyHandler[LEFT] == True:
-            self.vx = -6
+      
+            self.vx = -25
             self.dir = -1
+            
         elif self.keyHandler[RIGHT] == True:
-            self.vx = 6
+            self.vx = 20
             self.dir = 1
+    
+            
         elif self.keyHandler[UP] == True:
-            self.vy = -6
+            self.vy = -20
+   
+            
         elif self.keyHandler[DOWN] == True:
-            self.vy = 6
+            self.vy = 20
+   
+          #FIX THIS
+        if  self.x in range(1025):
+            self.x += self.vx 
+        else: 
+             pass   
+            
+        if self.y in range(550)
+            self.y += self.vy
+        else:
+            pass
 
-        self.x += self.vx
-        self.y += self.vy
 
-        self.Score = 0
-        self.Lives = 4
 
-# if self.x and self.y + a number is equal to the x and y of enemy them delete
     # for b in g.basketballs:
     #         if self.distance(s) < self.r + s.r:
     #             g.basketballs.remove(b)
@@ -85,10 +97,9 @@ class Bird(Creature):
     #                 del e
     #                 self.Lives -= 1
                     
-                #else:
-                    #self.gameoverSound.rewind()
-                    #self.gameoverSound.play()
-                    #g.__init__(1280,720,585)
+                
+           # if self.Lives == 0: 
+                    #g.__init__(1025,550,200)
 
     def distance (self,e):
         return ((self.x-e.x)**2+(self.y-e.y)**2)**0.5
@@ -97,54 +108,39 @@ class Bird(Creature):
         self.update()
         image(self.img,self.x,self.y)
         
+        
 class Book(Creature):#book is an enemie
     def __init__(self,x,y,r,g,img,w,h,F):
         Creature.__init__(self,x,y,r,g,img,w,h,F)
-
-    points = []
-    # going to create a list of points that are in a lost and then the book will go to these new points
-
-    def update(self):
-        # new position will be the new points
-
-        def display(self):
-            self.update()
-
-class Book2(Book):#book2 is an enemie (same attributes as book just different)
-    def __init__(self,x,y,r,g,img,w,h,F):
-        Book.__init__(self,x,y,r,g,img,w,h,F)
+        
+        self.x = random(g.w,g.w+20)
+        self.y = random(g.h,g.h+20)
+        
+        self.vx = 
+        self.vy = 
+   
 
 
-    points = []
-    # going to create a list of points that are in a lost and then the book will go to these new points
 
     def update(self):
-        # new position will be the new points
-        pass
+        
 
-    #def display(self):
-        #self.update()
+
+
+
 
 class Ball():
     def __init__(self):
         self.x = x
         self.y = y
         self.r = r
-        self.img = loadImage(path+"/images"+img)
-        self.g = g
+    
         self.b = "no" #this will indicate whether the ball will bounce or not 
 
 
     def update(self):
 
-        if self.y == 0:
-            self.y += 5
-
-        elif self.y == 5:
-            self.y -= 5
-
-    def display(self):
-        self.update()
+   
 
 
 
@@ -153,12 +149,7 @@ class BB(Ball): #basketball
         Ball.__init__(x,y,r,img,g,b)
 
 
-    def update(self):
-        pass
-
-    def display(self):
-        pass
-        
+    
 
 class PB(Ball): #pool ball
     def __init__(self):
@@ -199,8 +190,6 @@ class Game():
         # for j in range (5):
         #     self.poolballs.append(PB) #- need to chose random ball either here or in class
 
-
-
     def display(self):
         print(self.time % 300)
         if 0 <= self.time % 300 <= 100:
@@ -216,12 +205,31 @@ class Game():
             self.img = loadImage(path+"/images/BCKGROUND3.png")
             image(self.img,0,0,self.w, self.h)
     
-            # self.img = loadImage(path+"/images/platform.png")
+   
             
+        #scores
+        fill(225)
+        rect(0, 0, 180,50)
+        textSize(24)
+        fill(0)
+        text("Score: " + str(self.bird.Score), 30, 35)
         
-        rect(0, 0, 250,50)
-        textSize(40)
-        text(self.counter, 20, 80)
+           #lives
+        fill(225)   
+        rect(400, 0, 150,50)
+        textSize(24)
+        fill(0)
+        text("Lives: " + str(self.bird.Lives), 425, 35)
+        
+        
+        #time
+        fill(225)
+        rect(800, 0, 150,50)
+        textSize(24)
+        fill(0)
+        text("Time: " + str(self.time), 815, 35)
+        
+     
             
 
         for i in self.basketballs:
@@ -254,7 +262,7 @@ def draw():
     if g.state == 'menu':
         g.display()
         # background(0)
-        textSize(36)
+        textSize(30)
         fill(255)
         # code for the choices 
         
@@ -268,6 +276,8 @@ def draw():
     #pass
 
 def mouseClicked():
+    #YASIRS CODE: if g.state == "menu" and g.w//2.5 < mouseX < g.w//2.5 + 220 and g.h//3 < mouseY < g.h//3+50:
+        #g.state="play"
     #need coordinates if clicked in box of play then will play
     # if g.state == 'menu' and and : # between ands are rectangle
     #     g.state = "play" #reassigning the state to play
