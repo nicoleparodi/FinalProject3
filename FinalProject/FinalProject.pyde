@@ -1,14 +1,14 @@
 add_library('minim')
-import os
+import os, random
 path = os.getcwd()
 player = Minim(this)
 
 class Creature():
-    def __init__(self,x,y,r,g,img,w,h,F):
+    def __init__(self,x,y,r,gr,img,w,h,F):
         self.x=x
         self.y=y
         self.r=r
-        self.g=g
+        self.gr=gr
         self.vx=0
         self.vy=0
         self.w=w
@@ -18,8 +18,6 @@ class Creature():
         self.img = img
         self.dir = 1
 
-    
-
     def update(self):
 
         self.x += self.vx
@@ -28,7 +26,7 @@ class Creature():
    
     def display(self):
         self.update()
-        
+        image(self.img,self.x,self.y)
     #     if self.vx != 0:
     #         self.f = (self.f+0.3)%self.F
 
@@ -38,8 +36,8 @@ class Creature():
     #         image(self.img,200,100,self.w,self.h,self.x,0,0,self.y) 
 
 class Bird(Creature):
-    def __init__(self,x,y,r,g,img,w,h,F):
-        Creature.__init__(self,x,y,r,g,img,w,h,F)
+    def __init__(self,x,y,r,gr,img,w,h,F):
+        Creature.__init__(self,x,y,r,gr,img,w,h,F)
         self.keyHandler = {LEFT:False, RIGHT:False, UP:False, DOWN: False}
         
         self.Score = 0
@@ -47,33 +45,33 @@ class Bird(Creature):
 
     def update(self):
         if self.keyHandler[LEFT] == True:
-      
-            self.vx = -25
-            self.dir = -1
+            self.vx = -15
             
         elif self.keyHandler[RIGHT] == True:
-            self.vx = 20
-            self.dir = 1
-    
+            self.vx = 15
+        
+        else:
+            self.vx = 0
+        
             
-        elif self.keyHandler[UP] == True:
-            self.vy = -20
-   
+        if self.keyHandler[UP] == True:
+            self.vy = -15
             
         elif self.keyHandler[DOWN] == True:
-            self.vy = 20
+            self.vy = 15
+        
+        else:
+            self.vy = 0
    
-          #FIX THIS
         if  self.x in range(1025):
             self.x += self.vx 
         else: 
-             pass   
+             self.x = 50   
             
-        if self.y in range(550)
+        if self.y in range(550):
             self.y += self.vy
         else:
-            pass
-
+            self.y = 50
 
 
     # for b in g.basketballs:
@@ -106,81 +104,83 @@ class Bird(Creature):
     
     def display (self):
         self.update()
-        image(self.img,self.x,self.y)
-        
+        image(self.img,self.x,self.y)        
         
 class Book(Creature):#book is an enemie
-    def __init__(self,x,y,r,g,img,w,h,F):
-        Creature.__init__(self,x,y,r,g,img,w,h,F)
+    def __init__(self,r,img,w,h,F):
         
-        self.x = random(g.w,g.w+20)
-        self.y = random(g.h,g.h+20)
+        self.offset = 20
+        x = random.randint(-self.offset,g.w+self.offset)
+        y = random.randint(-self.offset,g.h+self.offset)
         
-        self.vx = 
-        self.vy = 
+        while x in range(g.w) and y in range(g.h):
+            x = random.randint(-self.offset,g.w+self.offset)
+            y = random.randint(-self.offset,g.h+self.offset)
+            
+        gr = 0
+        
+        Creature.__init__(self,x,y,r,gr,img,w,h,F)
+        
+        
+        self.vx = random.randint(-10,10)
+        self.vy = random.randint(-10,10)
    
 
-
-
-    def update(self):
         
 
 
-
-
-
-class Ball():
-    def __init__(self):
-        self.x = x
-        self.y = y
-        self.r = r
+#  class Ball(Creature):
+#      def __init__(self):
+#          self.x = x
+#          self.y = y
+#          self.r = r
     
-        self.b = "no" #this will indicate whether the ball will bounce or not 
+         
 
-
-    def update(self):
+#      def update(self):
 
    
-
-
-
-class BB(Ball): #basketball
-    def __init__(self):
-        Ball.__init__(x,y,r,img,g,b)
+ # class BB(Ball): #basketball
+ #     def __init__(self):
+ #         Ball.__init__(x,y,r,img,gr,b)
 
 
     
 
-class PB(Ball): #pool ball
-    def __init__(self):
-        Ball.__init__(x,y,r,img,g,b)
+ # class PB(Ball): #pool ball
+ #    def __init__(self):
+ #        Ball.__init__(x,y,r,img,gr,b)
 
 
-    def update(self):
-        pass
+ #    def update(self):
+ #         pass
 
-    def display(self):
-        pass
+ #     def display(self):
+ #        pass
 
 
 class Game():
-    def __init__(self,w,h,g):
+    def __init__(self,w,h,gr):
         self.w=w
         self.h=h
-        self.g=g
+        self.gr=gr
         self.state = "menu"
         self.time = 0
         self.counter = 0
         
         self.birdimg = loadImage(path+"/images/blueparrot.png")
+        self.bookimg = loadImage(path+"/images/book2.png")
+        
+        
+    def CreateGame(self):
         self.bird = Bird(50,100,4,100,self.birdimg,16,12,2)
 
 
         self.booklist = [] # will add 2 different books to list
-        # for b in range(3):
-        #     self.booklist.append(Book(,,,,))
-        # for c in range(3):
-        #     self.booklist.append(Book2(,,,))
+        
+        for b in range(10):
+             self.booklist.append(Book(2,self.bookimg,10,10,2))
+   
 
         self.basketballs = []
         # for i in range (3):
@@ -189,6 +189,7 @@ class Game():
         self.poolballs = []
         # for j in range (5):
         #     self.poolballs.append(PB) #- need to chose random ball either here or in class
+
 
     def display(self):
         print(self.time % 300)
@@ -241,8 +242,7 @@ class Game():
             pass
 
         for b in self.booklist:
-            pass
-            #randomize which ones are picked to be displayed
+            b.display()
                 
         self.bird.display()
                  
@@ -256,6 +256,8 @@ g = Game(1025,550,200)
 def setup():
     size(g.w,g.h)
     background(0)
+    g.CreateGame()
+    
 
 def draw():
     g.update()
