@@ -129,35 +129,47 @@ class Book(Creature):#book is an enemie
         
 
 
-#  class Ball(Creature):
-#      def __init__(self):
-#          self.x = x
-#          self.y = y
-#          self.r = r
+class B_Ball(Creature):
+     def __init__(self,r,img,w,h,F):
+        
+        self.offset = 20
+        x = random.randint(-self.offset,g.w+self.offset)
+        y = random.randint(-self.offset,g.h+self.offset)
+        
+        while x in range(g.w) and y in range(g.h):
+            x = random.randint(-self.offset,g.w+self.offset)
+            y = random.randint(-self.offset,g.h+self.offset)
+            
+        gr = 0
+        
+        Creature.__init__(self,x,y,r,gr,img,w,h,F)
+        
+        
+        self.vx = random.randint(-10,10)
+        self.vy = random.randint(-10,10)
+
     
-         
-
-#      def update(self):
-
-   
- # class BB(Ball): #basketball
- #     def __init__(self):
- #         Ball.__init__(x,y,r,img,gr,b)
-
 
     
 
- # class PB(Ball): #pool ball
- #    def __init__(self):
- #        Ball.__init__(x,y,r,img,gr,b)
-
-
- #    def update(self):
- #         pass
-
- #     def display(self):
- #        pass
-
+class P_Ball(Creature): #pool ball
+      def __init__(self,r,img,w,h,F):
+        
+        self.offset = 20
+        x = random.randint(-self.offset,g.w+self.offset)
+        y = random.randint(-self.offset,g.h+self.offset)
+        
+        while x in range(g.w) and y in range(g.h):
+            x = random.randint(-self.offset,g.w+self.offset)
+            y = random.randint(-self.offset,g.h+self.offset)
+            
+        gr = 0
+        
+        Creature.__init__(self,x,y,r,gr,img,w,h,F)
+        
+        
+        self.vx = random.randint(-10,10)
+        self.vy = random.randint(-10,10)
 
 class Game():
     def __init__(self,w,h,gr):
@@ -170,6 +182,8 @@ class Game():
         
         self.birdimg = loadImage(path+"/images/blueparrot.png")
         self.bookimg = loadImage(path+"/images/book2.png")
+        self.b_ballimg = loadImage(path+"/images/basketball.png")
+        self.p_ballimg = loadImage(path+"/images/ball3.png")
         
         
     def CreateGame(self):
@@ -177,18 +191,20 @@ class Game():
 
 
         self.booklist = [] # will add 2 different books to list
-        
+        self.poolballs = []  
+        self.basketballs = []
+              
         for b in range(10):
              self.booklist.append(Book(2,self.bookimg,10,10,2))
    
 
-        self.basketballs = []
-        # for i in range (3):
-        #     self.basketballs.append(BB(,,,,))
+       
+        for i in range (3):
+            self.basketballs.append(B_Ball(2,self.b_ballimg,10,10,2))
 
-        self.poolballs = []
-        # for j in range (5):
-        #     self.poolballs.append(PB) #- need to chose random ball either here or in class
+      
+        for j in range (5):
+            self.poolballs.append(P_Ball(2,self.p_ballimg,10,10,2))
 
 
     def display(self):
