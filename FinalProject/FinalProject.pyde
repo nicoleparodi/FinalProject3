@@ -27,13 +27,12 @@ class Creature():
     def display(self):
         self.update()
         image(self.img,self.x,self.y)
-    #     if self.vx != 0:
-    #         self.f = (self.f+0.3)%self.F
 
-    #     if self.dir > 0:
-    #         image(self.img,200,100,self.w,self.h)
-    #     elif self.dir < 0:
-    #         image(self.img,200,100,self.w,self.h,self.x,0,0,self.y) 
+
+        if self.dir > 0:
+            image(self.img,200,100,self.w,self.h)
+        elif self.dir < 0:
+            image(self.img,200,100,self.w,self.h,self.x,0,0,self.y) 
 
 class Bird(Creature):
     def __init__(self,x,y,r,gr,img,w,h,F):
@@ -74,30 +73,30 @@ class Bird(Creature):
             self.y = 50
 
 
-    # for b in g.basketballs:
-    #         if self.distance(s) < self.r + s.r:
-    #             g.basketballs.remove(b)
-    #             del b
-            
-    #             self.Score += 1
-
-    # for p in g.poolballs:
-    #         if self.distance(s) < self.r + s.r:
-    #             g.poolballs.remove(p)
-    #             del p
-            
-    #             self.BallCnt += 1
+        for b in g.basketballs:
+                if self.distance(b) < self.r + b.r:
+                    g.basketballs.remove(b)
+                    del b
                 
-    # for e in g.booklist:
-    #         if self.distance(e) < self.r + e.r:
-    #             # there is a collision with e
-    #                 g.booklist.remove(e)
-    #                 del e
-    #                 self.Lives -= 1
+                    self.Score += 1
+    
+        for p in g.drinks:
+                if self.distance(p) < self.r + p.r:
+                    g.drinks.remove(p)
+                    del p
+                
+                    self.Score += 1
                     
-                
-           # if self.Lives == 0: 
-                    #g.__init__(1025,550,200)
+        for e in g.booklist:
+                if self.distance(e) < self.r + e.r:
+                    # there is a collision with e
+                        g.booklist.remove(e)
+                        del e
+                        self.Lives -= 1
+                        
+                    
+        if self.Lives == 0: 
+            g.__init__(1025,550,200)
 
     def distance (self,e):
         return ((self.x-e.x)**2+(self.y-e.y)**2)**0.5
@@ -152,7 +151,7 @@ class B_Ball(Creature):
 
     
 
-class P_Ball(Creature): #pool ball
+class CapriSun(Creature): #pool ball
       def __init__(self,r,img,w,h,F):
         
         self.offset = 20
@@ -180,10 +179,12 @@ class Game():
         self.time = 0
         self.counter = 0
         
-        self.birdimg = loadImage(path+"/images/blueparrot.png")
+        self.pause = False 
+        
+        self.birdimg = loadImage(path+"/images/bird2.png")
         self.bookimg = loadImage(path+"/images/book2.png")
         self.b_ballimg = loadImage(path+"/images/basketball.png")
-        self.p_ballimg = loadImage(path+"/images/ball3.png")
+        self.caprisunimg = loadImage(path+"/images/caprisun.png")
         
         
     def CreateGame(self):
@@ -191,37 +192,38 @@ class Game():
 
 
         self.booklist = [] # will add 2 different books to list
-        self.poolballs = []  
+        self.drinks = []  
         self.basketballs = []
               
-        for b in range(10):
+        for b in range(40):
              self.booklist.append(Book(2,self.bookimg,10,10,2))
    
 
        
-        for i in range (3):
+        for i in range (15):
             self.basketballs.append(B_Ball(2,self.b_ballimg,10,10,2))
 
       
-        for j in range (5):
-            self.poolballs.append(P_Ball(2,self.p_ballimg,10,10,2))
+        for j in range (25):
+            self.drinks.append(CapriSun(2,self.caprisunimg,10,10,2))
 
 
     def display(self):
-        print(self.time % 300)
-        if 0 <= self.time % 300 <= 100:
-            #display one image
-            self.img = loadImage(path+"/images/BCKGROUND1.png")
-            image(self.img,0,0,self.w, self.h)
-        elif 101 <= self.time % 300 <= 200:
-            #display one image 
-            self.img = loadImage(path+"/images/BCKGROUND2.png")
-            image(self.img,0,0,self.w, self.h)
-        elif 201 <= self.time % 300 <= 300:
-            #display one image 
-            self.img = loadImage(path+"/images/BCKGROUND3.png")
-            image(self.img,0,0,self.w, self.h)
-    
+        while g.state == 'play':
+            print(self.time % 300)
+            if 0 <= self.time % 300 <= 100:
+                #display one image
+                self.img = loadImage(path+"/images/BCKGROUND1.png")
+                image(self.img,0,0,self.w, self.h)
+            elif 101 <= self.time % 300 <= 200:
+                #display one image 
+                self.img = loadImage(path+"/images/BCKGROUND2.png")
+                image(self.img,0,0,self.w, self.h)
+            elif 201 <= self.time % 300 <= 300:
+                #display one image 
+                self.img = loadImage(path+"/images/BCKGROUND3.png")
+                image(self.img,0,0,self.w, self.h)
+        
    
             
         #scores
@@ -251,11 +253,11 @@ class Game():
 
         for i in self.basketballs:
             i.display()
-            pass
+            
 
-        for j in self.poolballs:
+        for j in self.drinks:
             j.display()
-            pass
+  
 
         for b in self.booklist:
             b.display()
@@ -265,7 +267,7 @@ class Game():
     def update(self):
         self.time += 1
 
-#time aspect
+
 
 g = Game(1025,550,200)
          
@@ -278,29 +280,37 @@ def setup():
 def draw():
     g.update()
     if g.state == 'menu':
-        g.display()
-        # background(0)
+        #g.display()
+        background(0)
         textSize(30)
-        fill(255)
-        # code for the choices 
+        if g.state == "menu" and g.w//2.5 < mouseX < g.w//2.5 + 220 and g.h//3 < mouseY < g.h//3+50:
+            fill(0,128,225)
+        else:
+            fill(225)
+            text(" PLAY GAME ", g.w//2.5+10, g.h//3+40)
+            
+        fill(225)
+        text(" How to play: Avoid the books and collect the other objects\n \t \t  to score points before it gets dark!", 70, g.h//3+140)
         
+            
     elif g.state == 'play':
-        pass
+        if not g.pause:
+            background(0)
+            g.display()
+        else:
+            fill(225,0,0)
+            textSize(30)
+            text("Paused.", g.w//2, g.h//2)
 
-    #box for the time
-    #box for the books collected 
+   
 
-
-    #pass
 
 def mouseClicked():
-    #YASIRS CODE: if g.state == "menu" and g.w//2.5 < mouseX < g.w//2.5 + 220 and g.h//3 < mouseY < g.h//3+50:
-        #g.state="play"
-    #need coordinates if clicked in box of play then will play
-    # if g.state == 'menu' and and : # between ands are rectangle
-    #     g.state = "play" #reassigning the state to play
+ if g.state == "menu" and g.w//2.5 < mouseX < g.w//2.5 + 220 and g.h//3 < mouseY < g.h//3+50:
+        g.state="play"
 
-    pass
+
+
 
 def keyPressed():
     if keyCode == LEFT:
@@ -311,6 +321,9 @@ def keyPressed():
         g.bird.keyHandler[UP]=True
     elif keyCode == DOWN:
         g.bird.keyHandler[DOWN]= True
+        
+    elif keyCode == 32:
+        g.pause = not g.pause
 
 def keyReleased():
     if keyCode == LEFT:
