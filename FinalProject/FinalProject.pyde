@@ -3,6 +3,8 @@ import os, random
 path = os.getcwd()
 player = Minim(this)
 
+#PFont font 
+
 class Creature():
     def __init__(self,x,y,r,gr,img,w,h,F):
         self.x=x
@@ -72,34 +74,38 @@ class Bird(Creature):
         else:
             self.y = 50
 
-
+        # detect collision with basketballs
         for b in g.basketballs:
-                if self.distance(b) < self.r + b.r:
-                    g.basketballs.remove(b)
-                    del b
+            if self.distance(b) < self.r + b.r:
+                print('collidee')
+                g.basketballs.remove(b)
+                del b
                 
-                    self.Score += 1
+                self.Score += 1
     
         for p in g.drinks:
-                if self.distance(p) < self.r + p.r:
-                    g.drinks.remove(p)
-                    del p
+            
+            if self.distance(p) < self.r + p.r:
+                print('collide w drinks')
+                g.drinks.remove(p)
+                del p
                 
-                    self.Score += 1
-                    
+                self.Score += 1
+
         for e in g.booklist:
-                if self.distance(e) < self.r + e.r:
-                    # there is a collision with e
-                        g.booklist.remove(e)
-                        del e
-                        self.Lives -= 1
+            print ('Book: ' + str(self.distance(e)) + " " +str(self.r + e.r))
+            if self.distance(e) < self.r + e.r:
+                # there is a collision with e
+                g.booklist.remove(e)
+                del e
+                self.Lives -= 1
                         
                     
         if self.Lives == 0: 
             g.__init__(1025,550,200)
 
     def distance (self,e):
-        return ((self.x-e.x)**2+(self.y-e.y)**2)**0.5
+        return (((self.x-e.x)**2+(self.y-e.y)**2)**0.5)
     
     def display (self):
         self.update()
@@ -151,7 +157,7 @@ class B_Ball(Creature):
 
     
 
-class CapriSun(Creature): #pool ball
+class CapriSun(Creature): 
       def __init__(self,r,img,w,h,F):
         
         self.offset = 20
@@ -167,8 +173,8 @@ class CapriSun(Creature): #pool ball
         Creature.__init__(self,x,y,r,gr,img,w,h,F)
         
         
-        self.vx = random.randint(-10,10)
-        self.vy = random.randint(-10,10)
+        self.vx = random.randint(-10,5)
+        self.vy = random.randint(-10,5)
 
 class Game():
     def __init__(self,w,h,gr):
@@ -183,7 +189,7 @@ class Game():
         
         self.birdimg = loadImage(path+"/images/bird2.png")
         self.bookimg = loadImage(path+"/images/book2.png")
-        self.b_ballimg = loadImage(path+"/images/basketball.png")
+        self.b_ballimg = loadImage(path+"/images/bball.png")
         self.caprisunimg = loadImage(path+"/images/caprisun.png")
         
         
@@ -209,8 +215,10 @@ class Game():
 
 
     def display(self):
-        while g.state == 'play':
-            print(self.time % 300)
+
+            
+        if g.state == 'play':
+            print('game.display state:play', self.time % 300)
             if 0 <= self.time % 300 <= 100:
                 #display one image
                 self.img = loadImage(path+"/images/BCKGROUND1.png")
@@ -224,30 +232,31 @@ class Game():
                 self.img = loadImage(path+"/images/BCKGROUND3.png")
                 image(self.img,0,0,self.w, self.h)
         
-   
-            
-        #scores
+        font =loadFont("Courier-28.vlw");
+        
         fill(225)
         rect(0, 0, 180,50)
+        textFont(font)
         textSize(24)
         fill(0)
         text("Score: " + str(self.bird.Score), 30, 35)
         
-           #lives
+        #lives
         fill(225)   
         rect(400, 0, 150,50)
+        textFont(font)
         textSize(24)
         fill(0)
         text("Lives: " + str(self.bird.Lives), 425, 35)
         
-        
+    
         #time
         fill(225)
         rect(800, 0, 150,50)
+        textFont(font)
         textSize(24)
         fill(0)
         text("Time: " + str(self.time), 815, 35)
-        
      
             
 
@@ -266,6 +275,12 @@ class Game():
                  
     def update(self):
         self.time += 1
+        
+        # if self.time == 300:
+        #     g.state = 'done'
+        #     self.totalscore = 0 
+            
+            
 
 
 
@@ -278,38 +293,52 @@ def setup():
     
 
 def draw():
+    font =loadFont("Courier-28.vlw");
     g.update()
+    print(g.state)
     if g.state == 'menu':
         #g.display()
         background(0)
+        textFont(font)
         textSize(30)
         if g.state == "menu" and g.w//2.5 < mouseX < g.w//2.5 + 220 and g.h//3 < mouseY < g.h//3+50:
-            fill(0,128,225)
+            fill(102,178,225)
         else:
             fill(225)
-            text(" PLAY GAME ", g.w//2.5+10, g.h//3+40)
+        textFont(font)
+        text(" PLAY GAME ", g.w//2.5+10, g.h//3+40)
             
         fill(225)
-        text(" How to play: Avoid the books and collect the other objects\n \t \t  to score points before it gets dark!", 70, g.h//3+140)
+        textFont(font)
+        text(" How to play: Avoid the books and collect the other\n \t  \t objects to score points before it gets dark!", 70, g.h//3+140)
         
             
     elif g.state == 'play':
         if not g.pause:
             background(0)
+            print(' play display')
             g.display()
         else:
-            fill(225,0,0)
+            fill(102,102,255)
             textSize(30)
-            text("Paused.", g.w//2, g.h//2)
+            textFont(font)
+            text("Paused.", 450, g.h//2)
+            
+    # elif g.state == 'done':
+    #     background(0)
+    #     textFont(font)
+    #     textSize(30)
+    #     text("Game Over!\n Your score: ", g.totalscore)
+       
+        
 
    
 
 
 def mouseClicked():
  if g.state == "menu" and g.w//2.5 < mouseX < g.w//2.5 + 220 and g.h//3 < mouseY < g.h//3+50:
+        g.time = 0
         g.state="play"
-
-
 
 
 def keyPressed():
