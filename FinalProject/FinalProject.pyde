@@ -54,10 +54,12 @@ class Bird(Creature):
         Creature.__init__(self,x,y,r,gr,img,w,h,F,vx=0,vy=0)
         self.keyHandler = {LEFT:False, RIGHT:False, UP:False, DOWN: False}
         
+        #initializing the scores and the lives
         self.Score = 0
         self.Lives = 3
 
     def update(self):
+        # the functions for the keys pressed
         if self.keyHandler[LEFT] == True:
             self.vx = -30
         elif self.keyHandler[RIGHT] == True:
@@ -92,6 +94,8 @@ class Bird(Creature):
                 
                 self.Score += 20
     
+        # detect collision with caprisuns
+
         for p in g.drinks:
             
             if self.distance(p) < self.r + p.r:
@@ -100,6 +104,8 @@ class Bird(Creature):
                 del p
                 
                 self.Score += 10
+                
+        # detect collision with books
 
         for e in g.booklist:
             print ('Book: ' + str(self.distance(e)) + " " +str(self.r + e.r))
@@ -112,7 +118,7 @@ class Bird(Creature):
                 self.Lives -= 1
                         
                     
-        if self.Lives == 0: 
+        if self.Lives == 0: #if the lives are  zero we will switch states
             g.state = 'lost'
             g.tRtime = False
         
@@ -133,7 +139,7 @@ class Book(Creature):#book is an enemie
     def __init__(self,r,img,w,h,F,vx,vy):
         
         
-        self.offset = 20
+        self.offset = 20 #creating an offset so that the objects come from out of screen
         x = random.randint(-self.offset,g.w+self.offset)
         y = random.randint(-self.offset,g.h+self.offset)
         
@@ -152,14 +158,14 @@ class Book(Creature):#book is an enemie
         
 
 
-class B_Ball(Creature):
+class B_Ball(Creature): #the balls
      def __init__(self,r,img,w,h,F,vx,vy):
         
-        self.offset = 20
+        self.offset = 20 #offset for it to come from outside of field
         x = random.randint(-self.offset,g.w+self.offset)
         y = random.randint(-self.offset,g.h+self.offset)
         
-        while x in range(g.w) and y in range(g.h):
+        while x in range(g.w) and y in range(g.h): #if its in the field will redo
             x = random.randint(-self.offset,g.w+self.offset)
             y = random.randint(-self.offset,g.h+self.offset)
             
@@ -195,7 +201,7 @@ class Game():
         self.w=w
         self.h=h
         self.gr=gr
-        self.state = "menu"
+        self.state = "menu" #initial state is this
         self.tRtime = True
         self.time = 0
         self.counter = 0
@@ -216,7 +222,7 @@ class Game():
         self.drinks = []  
         self.basketballs = []
               
-        for b in range(7):
+        for b in range(7): #creating books
             vx = random.randint(-30,20)
             vy = random.randint(-30,15)
             self.booklist.append(Book(50,self.bookimg,10,10,2,vx, vy))
@@ -234,7 +240,7 @@ class Game():
 
     def display(self):
 
-            
+        #play state
         if g.state == 'play':
             print('game.display state:play', self.time % 300)
             if 0 <= self.time % 300 <= 100:
@@ -316,6 +322,7 @@ def draw():
     font =loadFont("Courier-28.vlw");
     g.update()
     print(g.state)
+    # different states and what comes with them
     if g.state == 'menu':
         #g.display()
         background(0)
@@ -365,6 +372,7 @@ def draw():
 
 
 def mouseClicked():
+    #mouse clicked functions
  if g.state == "menu" and g.w//2.5 < mouseX < g.w//2.5 + 220 and g.h//3 < mouseY < g.h//3+50:
         g.time = 0
         #g.music.play()
