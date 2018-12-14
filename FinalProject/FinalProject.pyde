@@ -45,20 +45,20 @@ class Bird(Creature):
 
     def update(self):
         if self.keyHandler[LEFT] == True:
-            self.vx = -15
+            self.vx = -30
             
         elif self.keyHandler[RIGHT] == True:
-            self.vx = 15
+            self.vx = 30
         
         else:
             self.vx = 0
         
             
         if self.keyHandler[UP] == True:
-            self.vy = -15
+            self.vy = -30
             
         elif self.keyHandler[DOWN] == True:
-            self.vy = 15
+            self.vy = 30
         
         else:
             self.vy = 0
@@ -122,8 +122,8 @@ class Book(Creature):#book is an enemie
         Creature.__init__(self,x,y,r,gr,img,w,h,F)
         
         
-        self.vx = random.randint(-10,10)
-        self.vy = random.randint(-10,10)
+        self.vx = random.randint(-50,10)
+        self.vy = random.randint(-50,10)
    
 
         
